@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.user.models import User, UserRoles
-from auth.services import AuthService
+
+from .services import AuthService
 
 # Swagger UI'da Avtorizatsiya oynasi ochilishi uchun /auth/login manziliga yo'naltiramiz
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")

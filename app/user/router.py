@@ -5,9 +5,10 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.user.models import User
-from app.user.schemas import UserCreate, UserPatch, UserResponse, UserUpdate
-from app.user.services import UserService
+
+from .models import User
+from .schemas import UserCreate, UserPatch, UserResponse, UserUpdate
+from .services import UserService
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
