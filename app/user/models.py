@@ -3,6 +3,7 @@ from enum import Enum
 
 from sqlalchemy import Boolean, Column, DateTime, Integer, String
 from sqlalchemy import Enum as SQLEnum
+from sqlalchemy.orm import relationship
 
 from app.core.database import Base
 
@@ -28,3 +29,7 @@ class User(Base):
         default=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
+
+    like = relationship("Like", back_populates="user")
+    comment = relationship("Comment", back_populates="user")
+    post = relationship("Post", back_populates="user") # author_id

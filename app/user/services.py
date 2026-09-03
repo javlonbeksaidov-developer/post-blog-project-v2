@@ -1,6 +1,7 @@
-from auth.services import AuthService
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
+
+from app.auth.services import AuthService
 
 from .models import User
 from .schemas import UserCreate, UserPatch, UserUpdate
@@ -76,7 +77,8 @@ class UserService:
         return user
 
     @staticmethod
-    def delete(db: Session, user_id: int) -> None:
+    def delete(db: Session, user_id: int):
         user = UserService.get_by_id(db, user_id)
         db.delete(user)
         db.commit()
+        return {"messaage": "deleted user!"}
