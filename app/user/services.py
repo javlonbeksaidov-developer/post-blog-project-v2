@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 
 from app.auth.services import AuthService
 
-from .models import User
-from .schemas import UserCreate, UserPatch, UserUpdate
+from .models import User, UserRoles
+from .schemas import AdminCreate, UserCreate, UserPatch, UserUpdate
 
 
 class UserService:
@@ -42,7 +42,34 @@ class UserService:
             email=user_in.email,
             password=hashed_pwd,
             full_name=user_in.full_name,
-            role=user_in.role,
+            role=UserRoles.USER,
+        )
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return new_user
+
+    @staticmethod
+    def create_admin(db: Session, user_in: AdminCreate) -> User:
+        # Username yoki Email mavjudligini tekshirish
+        existing_user = (
+            db.query(User)
+            .filter((User.username == user_in.username) | (User.email == user_in.email))
+            .first()
+        )
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Ushbu username yoki email allaqachon ro'yxatdan o'tgan",
+            )
+
+        hashed_pwd = AuthService.get_password_hash(user_in.password)
+        new_user = User(
+            username=user_in.username,
+            email=user_in.email,
+            password=hashed_pwd,
+            full_name=user_in.full_name,
+            role=UserRoles.ADMIN,
         )
         db.add(new_user)
         db.commit()

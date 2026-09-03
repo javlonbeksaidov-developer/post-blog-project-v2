@@ -2,6 +2,9 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
+from app.category.schemas import CategoryResponse
+from app.user.schemas import UserResponse
+
 from .models import PostStatus
 
 
@@ -21,7 +24,7 @@ class PostUpdate(BaseModel):
     category_id: int
 
 
-class PostPanch(BaseModel):
+class PostPatch(BaseModel):
     title: str | None = None
     content: str | None = None
     image: str | None = None
@@ -34,3 +37,9 @@ class PostResponse(PostCreate):
     status: PostStatus
     created_at: datetime
     updated_at: datetime
+
+    user: UserResponse
+    category: CategoryResponse
+
+    class Config:
+        from_attributes = True

@@ -11,7 +11,13 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     full_name: str
-    role: UserRoles = UserRoles.USER
+
+
+class AdminCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+    full_name: str
 
 
 # To'liq yangilashda (PUT) kiritiladigan ma'lumotlar

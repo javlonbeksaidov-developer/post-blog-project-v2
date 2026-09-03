@@ -1,16 +1,16 @@
 from typing import Annotated
 
-from auth.dependencies import get_current_user, require_admin
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from app.auth.dependencies import get_current_user, require_admin
 from app.core.database import get_db
 
 from .models import User
-from .schemas import UserCreate, UserPatch, UserResponse, UserUpdate
+from .schemas import AdminCreate, UserCreate, UserPatch, UserResponse, UserUpdate
 from .services import UserService
 
-router = APIRouter(prefix="/users", tags=["Users"])
+router = APIRouter(prefix="/user", tags=["User management"])
 
 
 # 1. READ ALL (GET) - Barcha foydalanuvchilarni olish (Faqat Admin)
@@ -41,14 +41,22 @@ def get_user(
 
 
 # 4. CREATE (POST) - Yangi foydalanuvchi yaratish (Register)
-@router.post(
-    "/", response_model=UserResponse, status_code=status.HTTP_201_CREATED
-)
+@router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def create_user(
     user_in: UserCreate,
     db: Annotated[Session, Depends(get_db)],
 ):
     return UserService.create(db, user_in)
+
+
+@router.post(
+    "/create-admin", response_model=UserResponse, status_code=status.HTTP_201_CREATED
+)
+def create_admin(
+    user_in: AdminCreate,
+    db: Annotated[Session, Depends(get_db)],
+):
+    return UserService.create_admin(db, user_in)
 
 
 # 5. FULL UPDATE (PUT) - Foydalanuvchini to'liq yangilash (Faqat Admin)
@@ -73,6 +81,7 @@ def update_user_partial(
     # User faqat o'zini tahrirlashi mumkin, agar Admin bo'lmasa
     if current_user.id != user_id and current_user.role != "admin":
         from fastapi import HTTPException
+
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Siz faqat o'zingizning profilingizni tahrirlay olasiz",
