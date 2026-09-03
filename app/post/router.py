@@ -3,9 +3,9 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from app.auth.dependencies import require_author_or_admin
 from app.core.database import get_db
 from app.user import User
-from app.auth.dependencies import require_author_or_admin
 
 from .schemas import PostCreate, PostPatch, PostResponse, PostUpdate
 from .services import PostServices

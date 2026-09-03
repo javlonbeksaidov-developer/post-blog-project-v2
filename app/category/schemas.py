@@ -5,6 +5,9 @@ class CategoryCreate(BaseModel):
     name: str
     description: str
 
+class CategoryUpdate(BaseModel):
+    name: str
+    description: str
 
 class CategoryResponse(CategoryCreate):
     id: int

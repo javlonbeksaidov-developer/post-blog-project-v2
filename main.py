@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from app.auth.router import router as router_auth
 from app.category import Category, router_category  # noqa: F401
 from app.comment import Comment, router_comment  # noqa: F401
 from app.core.database import Base, engine
@@ -14,6 +15,7 @@ app.include_router(router_category)
 app.include_router(router_post)
 app.include_router(router_comment)
 app.include_router(router_like)
+app.include_router(router_auth)
 
 Base.metadata.create_all(bind=engine)
 
