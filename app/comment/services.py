@@ -1,6 +1,9 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.post.services import PostServices
+from app.user.services import UserService
+
 from .models import Comment
 from .schemas import CommentBase
 
@@ -9,6 +12,10 @@ class CommentServices:
     @staticmethod
     def create(db: Session, comment_in: CommentBase):
         comment = Comment(**comment_in.model_dump())
+
+        UserService.get_by_id(db, comment_in.user_id)
+        PostServices.get_by_id(db, comment_in.post_id)
+
         db.add(comment)
         db.commit()
         db.refresh(comment)

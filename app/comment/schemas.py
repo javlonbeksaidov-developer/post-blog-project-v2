@@ -16,3 +16,6 @@ class CommentResponse(CommentBase):
     created_at: datetime
 
     post: PostResponse
+
+    class Config:
+        from_attributes = True

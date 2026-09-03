@@ -11,3 +11,6 @@ class LikeBase(BaseModel):
 class LikeResponse(LikeBase):
     id: int
     created_at: datetime
+
+    class Config:
+        from_attributes = True

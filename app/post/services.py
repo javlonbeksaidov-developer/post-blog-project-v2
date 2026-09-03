@@ -3,6 +3,9 @@ from datetime import datetime
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.category.services import CategoryServices
+from app.user.services import UserService
+
 from .models import Post
 from .schemas import PostCreate, PostPatch, PostUpdate
 
@@ -24,6 +27,10 @@ class PostServices:
     @staticmethod
     def create(db: Session, post_in: PostCreate) -> Post:
         new_post = Post(**post_in.model_dump())
+
+        UserService.get_by_id(db, post_in.author_id)
+        CategoryServices.get_by_id(db, post_in.category_id)
+
         db.add(new_post)
         db.commit()
         db.refresh(new_post)

@@ -1,6 +1,9 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.post.services import PostServices
+from app.user.services import UserService
+
 from .models import Like
 from .schemas import LikeBase
 
@@ -9,6 +12,10 @@ class LikeServices:
     @staticmethod
     def like(db: Session, like_in: LikeBase):
         like = Like(**like_in.model_dump())
+
+        UserService.get_by_id(db, like_in.user_id)
+        PostServices.get_by_id(db, like_in.post_id)
+
         db.add(like)
         db.commit()
         db.refresh(like)
